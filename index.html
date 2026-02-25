@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pastel do Chiquinho - Feed</title>
+
+<style>
+/* Reset e Visual Moderno */
+*{margin:0;padding:0;box-sizing:border-box}
+
+body {
+  background: #000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Container 9:16 Perfeito e Responsivo */
+.container {
+  width: 100%;
+  height: 100%;
+  max-width: calc(100vh * (9/16));
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+
+/* Área da Foto (60% da Altura) */
+.topo-foto {
+  flex: 0 0 60%;
+  background: #222; /* Cor de fundo caso a imagem falhe */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.topo-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Área da Informação (40% da Altura) */
+.base-info {
+  flex: 0 0 40%;
+  padding: 8%;
+  display: flex;
+  flex-direction: column;
+  border-top: 6px solid #ffcc00; /* Cor do Chiquinho */
+  background: #fff;
+}
+
+.header-perfil {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  padding: 3px;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+}
+
+.nome-principal {
+  font-weight: 800;
+  font-size: clamp(1rem, 4.5vw, 1.3rem);
+  color: #1a1a1a;
+}
+
+.arroba {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Textos Adaptáveis */
+.conteudo-texto {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.titulo {
+  font-size: clamp(1.2rem, 5.5vw, 1.6rem);
+  font-weight: 800;
+  color: #000;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.legenda {
+  font-size: clamp(0.9rem, 4vw, 1.1rem);
+  color: #333;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* Limita linhas para não quebrar o layout */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#loading { color: #fff; font-weight: bold; }
+</style>
+</head>
+
+<body>
+
+<div class="container" id="app">
+  <div id="loading">Sincronizando feed...</div>
+</div>
+
+<script>
+
+// ===============================
+// CONFIGURAÇÕES DO FEED
+// ===============================
+const feedUrl = "https://rss.app/feeds/gEYrYZwwdvNWd2YG.xml";
+const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
+
+// ===============================
+// PROXY DE IMAGEM (libera Instagram CDN)
+// ===============================
+function fixImage(url) {
+  if (!url) return null;
+
+  // Ignora vídeos
+  if (url.includes(".mp4")) return null;
+
+  return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
+}
+
+// ===============================
+// CARREGAR CONTEÚDO
+// ===============================
+async function carregarConteudo() {
+
+  try {
+
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    if (data.status !== 'ok') throw new Error();
+
+    // ==========================================
+    // FILTRA TODAS AS PUBLICAÇÕES COM IMAGEM
+    // ==========================================
+    const postsComImagem = data.items.filter(item => {
+
+      let possibleImg =
+        item.thumbnail ||
+        (item.enclosure && item.enclosure.link ? item.enclosure.link : null) ||
+        extrairImg(item.description);
+
+      if (!possibleImg) return false;
+
+      // Ignora vídeos
+      if (possibleImg.includes(".mp4")) return false;
+
+      return true;
+    });
+
+    if (postsComImagem.length === 0) {
+      document.getElementById('loading').innerText =
+        "Nenhuma publicação com imagem encontrada.";
+      return;
+    }
+
+    // ==========================================
+    // SORTEIA ENTRE TODAS AS PUBLICAÇÕES COM IMAGEM
+    // ==========================================
+    const item =
+      postsComImagem[Math.floor(Math.random() * postsComImagem.length)];
+
+    let rawImg =
+      item.thumbnail ||
+      (item.enclosure && !item.enclosure.link.includes(".mp4")
+        ? item.enclosure.link
+        : null) ||
+      extrairImg(item.description);
+
+    const imgFinal = fixImage(rawImg);
+
+    const cleanDesc = stripHtml(item.description);
+
+    // ==========================================
+    // RENDERIZA
+    // ==========================================
+    document.getElementById('app').innerHTML = `
+      <div class="topo-foto">
+        ${
+          imgFinal
+            ? `<img src="${imgFinal}"
+                   onerror="this.parentElement.style.background='#333'; this.style.display='none';">`
+            : `<div style="color:#666">Sem imagem disponível</div>`
+        }
+      </div>
+
+      <div class="base-info">
+        <div class="header-perfil">
+          <div class="avatar">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png">
+          </div>
+          <div>
+            <div class="nome-principal">Pastel do Chiquinho</div>
+            <div class="arroba">@pasteldochiquinho24hs</div>
+          </div>
+        </div>
+
+        <div class="conteudo-texto">
+          <div class="titulo">${item.title}</div>
+          <div class="legenda">${cleanDesc}</div>
+        </div>
+      </div>
+    `;
+
+  } catch (e) {
+
+    document.getElementById('loading').innerText =
+      "Erro de conexão com o feed.";
+
+  }
+
+}
+
+// ===============================
+// EXTRAIR IMAGEM DA DESCRIÇÃO
+// ===============================
+function extrairImg(html) {
+  if (!html) return null;
+
+  const div = document.createElement('div');
+  div.innerHTML = html;
+
+  const img = div.querySelector('img');
+  return img ? img.src : null;
+}
+
+// ===============================
+// REMOVER HTML DA LEGENDA
+// ===============================
+function stripHtml(html) {
+  if (!html) return "";
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+}
+
+// ===============================
+carregarConteudo();
+// ===============================
+
+</script>
+
+</body>
+</html>
