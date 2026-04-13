@@ -27,36 +27,34 @@
             padding: 2vh 4vw;
         }
 
-        /* Header Centralizado no topo */
         .insta-header {
             flex: 0 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            margin-bottom: 2vh;
+            margin-bottom: 1.5vh;
             gap: 15px;
         }
 
         .insta-header .logo-icon {
-            height: 40px; 
+            height: 35px; 
             filter: brightness(0) invert(1);
         }
 
         .insta-header .logo-text { 
-            height: 45px; 
+            height: 40px; 
             object-fit: contain;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
 
-        /* Card Forçado na Vertical */
         .post-card {
             width: 100%;
-            height: 85vh; /* Ocupa a maior parte da tela */
+            height: 88vh; 
             background: #fff;
             border-radius: 20px; 
             display: flex;
-            flex-direction: column; /* Mídia em cima, texto embaixo */
+            flex-direction: column; 
             overflow: hidden;
             box-shadow: 0 30px 60px rgba(0,0,0,0.4);
             animation: slideIn 0.5s ease-out;
@@ -67,9 +65,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Container da Mídia (Superior) */
+        /* Área da Mídia aumentada para 75% */
         .post-media-container {
-            flex: 0 0 60%; /* Ocupa 60% do card */
+            flex: 0 0 75%; 
             background: #000;
             display: flex;
             align-items: center;
@@ -84,10 +82,10 @@
             object-fit: cover;
         }
 
-        /* Área de Conteúdo (Inferior) */
+        /* Área de Conteúdo mais curta */
         .post-content {
             flex: 1;
-            padding: 25px;
+            padding: 15px 20px;
             display: flex;
             flex-direction: column;
             background: #ffffff;
@@ -97,15 +95,15 @@
         .user-info {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 10px;
         }
 
         .user-info .avatar {
-            width: 60px;
-            height: 60px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            padding: 3px;
+            padding: 2px;
             background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
         }
 
@@ -118,16 +116,15 @@
 
         .user-details .username { 
             font-weight: 700; 
-            font-size: 1.4rem; 
+            font-size: 1.2rem; 
             color: #262626; 
         }
         
         .user-details .location { 
-            font-size: 1rem; 
+            font-size: 0.85rem; 
             color: #8e8e8e; 
         }
 
-        /* Área da Legenda */
         .caption-area {
             flex: 1;
             overflow: hidden;
@@ -135,8 +132,8 @@
         }
 
         .caption-area p { 
-            font-size: 1.5rem; /* Fonte maior para facilitar leitura em telas verticais */
-            line-height: 1.5; 
+            font-size: 1.25rem;
+            line-height: 1.3; 
             color: #262626; 
             text-align: left;
         }
@@ -144,7 +141,7 @@
         .text-overflow-fade {
             position: absolute;
             bottom: 0; left: 0;
-            width: 100%; height: 50px;
+            width: 100%; height: 30px;
             background: linear-gradient(transparent, white 90%);
         }
 
