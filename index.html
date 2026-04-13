@@ -24,41 +24,58 @@
             flex-direction: column;
             align-items: center; 
             justify-content: center; 
-            padding: 2vh 2vw;
+            padding: 20px;
         }
 
+        /* Header Ajustado */
         .insta-header {
-            flex: 0 0 12vh;
+            flex: 0 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
             margin-bottom: 2vh;
-            gap: 20px;
+            gap: 15px;
         }
 
         .insta-header .logo-icon {
-            height: 8.5vh; 
+            height: 40px; 
             filter: brightness(0) invert(1);
         }
 
         .insta-header .logo-text { 
-            height: 9vh; 
+            height: 45px; 
             object-fit: contain;
-            transform: translateY(5px);
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
 
+        /* Card Responsivo */
         .post-card {
-            width: 85vw; 
-            height: 72vh; 
+            width: 100%;
+            max-width: 1200px; /* Limite para telas ultra-wide */
+            height: auto;
+            max-height: 85vh;
             background: #fff;
             border-radius: 12px; 
             display: flex;
+            flex-direction: row; /* Padrão Horizontal */
             overflow: hidden;
             box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-            border: 6px solid #ffffff; 
             animation: slideIn 0.5s ease-out;
+        }
+
+        /* Ajuste para telas Verticais (Portrait) */
+        @media (orientation: portrait) {
+            .post-card {
+                flex-direction: column;
+                max-width: 90vw;
+                height: auto;
+            }
+            .post-media-container {
+                aspect-ratio: 1 / 1; /* Mantém quadrado no mobile */
+                width: 100%;
+            }
+            .caption-area p { font-size: 2vh !important; }
         }
 
         @keyframes slideIn {
@@ -68,7 +85,7 @@
 
         .post-media-container {
             flex: 1.2;
-            background: #f0f0f0;
+            background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -85,23 +102,24 @@
 
         .post-content {
             flex: 1;
-            padding: 4vh;
+            padding: 25px;
             display: flex;
             flex-direction: column;
             background: #ffffff;
             position: relative;
+            min-height: 200px;
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 3vh;
+            gap: 12px;
+            margin-bottom: 15px;
         }
 
         .user-info .avatar {
-            width: 7vh;
-            height: 7vh;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             padding: 2px;
             background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
@@ -116,22 +134,23 @@
 
         .user-details .username { 
             font-weight: 700; 
-            font-size: 2.8vh; 
+            font-size: 1.2rem; 
             color: #262626; 
         }
         
         .user-details .location { 
-            font-size: 1.8vh; 
-            color: #262626; 
+            font-size: 0.9rem; 
+            color: #8e8e8e; 
         }
 
         .caption-area {
             flex: 1;
             overflow: hidden;
+            position: relative;
         }
 
         .caption-area p { 
-            font-size: 2.8vh;
+            font-size: 1.3rem;
             line-height: 1.4; 
             color: #262626; 
             text-align: left;
@@ -140,14 +159,15 @@
         .text-overflow-fade {
             position: absolute;
             bottom: 0; left: 0;
-            width: 100%; height: 8vh;
-            background: linear-gradient(transparent, white 80%);
+            width: 100%; height: 40px;
+            background: linear-gradient(transparent, white 90%);
         }
 
         #loading { 
             position: fixed;
-            color: white; font-size: 3vh; font-weight: bold;
+            color: white; font-size: 1.5rem; font-weight: bold;
             z-index: 10;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
     </style>
 </head>
@@ -195,7 +215,6 @@ async function montarPlaylist() {
         
         let temporaryList = [];
 
-        // 1. Pega itens do RSS
         if (data.status === 'ok' && data.items.length > 0) {
             data.items.forEach(item => {
                 const img = extrairImg(item);
@@ -209,10 +228,8 @@ async function montarPlaylist() {
             });
         }
 
-        // 2. Adiciona os itens de backup obrigatórios
         backupMedia.forEach(b => temporaryList.push(b));
 
-        // 3. Embaralha a lista (Fisher-Yates shuffle)
         for (let i = temporaryList.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [temporaryList[i], temporaryList[j]] = [temporaryList[j], temporaryList[i]];
@@ -220,9 +237,7 @@ async function montarPlaylist() {
 
         mainPlaylist = temporaryList;
         currentIndex = 0;
-        console.log("Playlist atualizada com " + mainPlaylist.length + " itens.");
     } catch (e) {
-        console.error("Erro no RSS, usando apenas backups.");
         mainPlaylist = [...backupMedia];
     }
 }
@@ -230,7 +245,6 @@ async function montarPlaylist() {
 function exibirProximo() {
     if (mainPlaylist.length === 0) return;
 
-    // Se chegou ao fim da playlist, recarrega e embaralha de novo
     if (currentIndex >= mainPlaylist.length) {
         montarPlaylist().then(() => exibirProximo());
         return;
@@ -262,23 +276,21 @@ function renderizar(mediaHtml, caption) {
                     </div>
                     <div class="user-details">
                         <div class="username">pasteldochiquinho24hs</div>
-                        <div class="location">Instagram</div>
+                        <div class="location">Instagram • Bertioga</div>
                     </div>
                 </div>
                 <div class="caption-area">
                     <p><strong>pasteldochiquinho24hs</strong> ${caption}</p>
+                    <div class="text-overflow-fade"></div>
                 </div>
-                <div class="text-overflow-fade"></div>
             </div>
         </div>
     `;
 }
 
-// Inicialização
 (async function init() {
     await montarPlaylist();
     exibirProximo();
-    // Troca o item a cada 30 segundos
     setInterval(exibirProximo, 30000);
 })();
 </script>
