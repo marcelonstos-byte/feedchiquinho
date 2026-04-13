@@ -23,11 +23,11 @@
             display: flex;
             flex-direction: column;
             align-items: center; 
-            justify-content: center; 
-            padding: 20px;
+            justify-content: flex-start; 
+            padding: 2vh 4vw;
         }
 
-        /* Header Ajustado */
+        /* Header Centralizado no topo */
         .insta-header {
             flex: 0 0 auto;
             display: flex;
@@ -49,48 +49,32 @@
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
 
-        /* Card Responsivo */
+        /* Card Forçado na Vertical */
         .post-card {
             width: 100%;
-            max-width: 1200px; /* Limite para telas ultra-wide */
-            height: auto;
-            max-height: 85vh;
+            height: 85vh; /* Ocupa a maior parte da tela */
             background: #fff;
-            border-radius: 12px; 
+            border-radius: 20px; 
             display: flex;
-            flex-direction: row; /* Padrão Horizontal */
+            flex-direction: column; /* Mídia em cima, texto embaixo */
             overflow: hidden;
             box-shadow: 0 30px 60px rgba(0,0,0,0.4);
             animation: slideIn 0.5s ease-out;
         }
 
-        /* Ajuste para telas Verticais (Portrait) */
-        @media (orientation: portrait) {
-            .post-card {
-                flex-direction: column;
-                max-width: 90vw;
-                height: auto;
-            }
-            .post-media-container {
-                aspect-ratio: 1 / 1; /* Mantém quadrado no mobile */
-                width: 100%;
-            }
-            .caption-area p { font-size: 2vh !important; }
-        }
-
         @keyframes slideIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Container da Mídia (Superior) */
         .post-media-container {
-            flex: 1.2;
+            flex: 0 0 60%; /* Ocupa 60% do card */
             background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            position: relative;
         }
 
         .post-media-container img, 
@@ -100,6 +84,7 @@
             object-fit: cover;
         }
 
+        /* Área de Conteúdo (Inferior) */
         .post-content {
             flex: 1;
             padding: 25px;
@@ -107,21 +92,20 @@
             flex-direction: column;
             background: #ffffff;
             position: relative;
-            min-height: 200px;
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             margin-bottom: 15px;
         }
 
         .user-info .avatar {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            padding: 2px;
+            padding: 3px;
             background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
         }
 
@@ -134,15 +118,16 @@
 
         .user-details .username { 
             font-weight: 700; 
-            font-size: 1.2rem; 
+            font-size: 1.4rem; 
             color: #262626; 
         }
         
         .user-details .location { 
-            font-size: 0.9rem; 
+            font-size: 1rem; 
             color: #8e8e8e; 
         }
 
+        /* Área da Legenda */
         .caption-area {
             flex: 1;
             overflow: hidden;
@@ -150,8 +135,8 @@
         }
 
         .caption-area p { 
-            font-size: 1.3rem;
-            line-height: 1.4; 
+            font-size: 1.5rem; /* Fonte maior para facilitar leitura em telas verticais */
+            line-height: 1.5; 
             color: #262626; 
             text-align: left;
         }
@@ -159,12 +144,13 @@
         .text-overflow-fade {
             position: absolute;
             bottom: 0; left: 0;
-            width: 100%; height: 40px;
+            width: 100%; height: 50px;
             background: linear-gradient(transparent, white 90%);
         }
 
         #loading { 
             position: fixed;
+            top: 50%;
             color: white; font-size: 1.5rem; font-weight: bold;
             z-index: 10;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
