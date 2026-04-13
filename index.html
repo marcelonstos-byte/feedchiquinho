@@ -1,273 +1,286 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pastel do Chiquinho - Feed</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mídia Indoor - Pastel do Chiquinho</title>
 
-<style>
-/* Reset e Visual Moderno */
-*{margin:0;padding:0;box-sizing:border-box}
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-  background: #000;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-}
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
 
-/* Container 9:16 Perfeito e Responsivo */
-.container {
-  width: 100%;
-  height: 100%;
-  max-width: calc(100vh * (9/16));
-  max-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  box-shadow: 0 0 40px rgba(0,0,0,0.5);
-}
+        .viewport {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffcc00 0%, #d62976 45%, #4f5bd5 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            padding: 2vh 2vw;
+        }
 
-/* Área da Foto (60% da Altura) */
-.topo-foto {
-  flex: 0 0 60%;
-  background: #222; /* Cor de fundo caso a imagem falhe */
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
+        .insta-header {
+            flex: 0 0 12vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 2vh;
+            gap: 20px;
+        }
 
-.topo-foto img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+        .insta-header .logo-icon {
+            height: 8.5vh; 
+            filter: brightness(0) invert(1);
+        }
 
-/* Área da Informação (40% da Altura) */
-.base-info {
-  flex: 0 0 40%;
-  padding: 8%;
-  display: flex;
-  flex-direction: column;
-  border-top: 6px solid #ffcc00; /* Cor do Chiquinho */
-  background: #fff;
-}
+        .insta-header .logo-text { 
+            height: 9vh; 
+            object-fit: contain;
+            transform: translateY(5px);
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
 
-.header-perfil {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
+        .post-card {
+            width: 85vw; 
+            height: 72vh; 
+            background: #fff;
+            border-radius: 12px; 
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            border: 6px solid #ffffff; 
+            animation: slideIn 0.5s ease-out;
+        }
 
-.avatar {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-  padding: 3px;
-}
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
-.avatar img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  object-fit: cover;
-}
+        .post-media-container {
+            flex: 1.2;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-.nome-principal {
-  font-weight: 800;
-  font-size: clamp(1rem, 4.5vw, 1.3rem);
-  color: #1a1a1a;
-}
+        .post-media-container img, 
+        .post-media-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-.arroba {
-  font-size: 0.9rem;
-  color: #666;
-}
+        .post-content {
+            flex: 1;
+            padding: 4vh;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            position: relative;
+        }
 
-/* Textos Adaptáveis */
-.conteudo-texto {
-  flex-grow: 1;
-  overflow: hidden;
-}
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 3vh;
+        }
 
-.titulo {
-  font-size: clamp(1.2rem, 5.5vw, 1.6rem);
-  font-weight: 800;
-  color: #000;
-  line-height: 1.1;
-  margin-bottom: 8px;
-}
+        .user-info .avatar {
+            width: 7vh;
+            height: 7vh;
+            border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
+        }
 
-.legenda {
-  font-size: clamp(0.9rem, 4vw, 1.1rem);
-  color: #333;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 5; /* Limita linhas para não quebrar o layout */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+        .user-info .avatar img {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px solid white;
+            object-fit: cover;
+        }
 
-#loading { color: #fff; font-weight: bold; }
-</style>
+        .user-details .username { 
+            font-weight: 700; 
+            font-size: 2.8vh; 
+            color: #262626; 
+        }
+        
+        .user-details .location { 
+            font-size: 1.8vh; 
+            color: #262626; 
+        }
+
+        .caption-area {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .caption-area p { 
+            font-size: 2.8vh;
+            line-height: 1.4; 
+            color: #262626; 
+            text-align: left;
+        }
+
+        .text-overflow-fade {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 8vh;
+            background: linear-gradient(transparent, white 80%);
+        }
+
+        #loading { 
+            position: fixed;
+            color: white; font-size: 3vh; font-weight: bold;
+            z-index: 10;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container" id="app">
-  <div id="loading">Sincronizando feed...</div>
+<div class="viewport" id="viewport">
+    <div id="loading">SINCRONIZANDO CONTEÚDO...</div>
 </div>
 
 <script>
-
-// ===============================
-// CONFIGURAÇÕES DO FEED
-// ===============================
 const feedUrl = "https://rss.app/feeds/gEYrYZwwdvNWd2YG.xml";
 const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
 
-// ===============================
-// PROXY DE IMAGEM (libera Instagram CDN)
-// ===============================
-function fixImage(url) {
-  if (!url) return null;
+const backupMedia = [
+    { type: 'image', url: 'https://bertioga.tudoem.com.br/img/site/cropped_170401_2021080469565.jpeg', caption: "O melhor pastel da região! 🔥" },
+    { type: 'image', url: 'https://i.imgur.com/nuVZoGP.jpeg', caption: "Qualidade e sabor inigualável em Bertioga." },
+    { type: 'video', url: 'https://i.imgur.com/5XQ0dzr.mp4', caption: "Deu água na boca? Venha conferir! 🥟" },
+    { type: 'video', url: 'https://i.imgur.com/exciGvm.mp4', caption: "Pastel quentinho saindo agora!" }
+];
 
-  // Ignora vídeos
-  if (url.includes(".mp4")) return null;
+let mainPlaylist = [];
+let currentIndex = 0;
 
-  return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
+function stripHtml(html) {
+    if (!html) return "";
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return (div.textContent || div.innerText || "").trim().replace(/\s\s+/g, ' ');
 }
 
-// ===============================
-// CARREGAR CONTEÚDO
-// ===============================
-async function carregarConteudo() {
+function extrairImg(item) {
+    if (item.thumbnail && !item.thumbnail.includes(".mp4")) return item.thumbnail;
+    if (item.enclosure && item.enclosure.link && !item.enclosure.link.includes(".mp4")) return item.enclosure.link;
+    const div = document.createElement('div');
+    div.innerHTML = item.description;
+    const img = div.querySelector('img');
+    return img ? img.src : "";
+}
 
-  try {
+async function montarPlaylist() {
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        
+        let temporaryList = [];
 
-    const response = await fetch(apiUrl);
-    const data = await response.json();
+        // 1. Pega itens do RSS
+        if (data.status === 'ok' && data.items.length > 0) {
+            data.items.forEach(item => {
+                const img = extrairImg(item);
+                if (img) {
+                    temporaryList.push({
+                        type: 'image',
+                        url: img,
+                        caption: stripHtml(item.description) || "Confira nossas novidades!"
+                    });
+                }
+            });
+        }
 
-    if (data.status !== 'ok') throw new Error();
+        // 2. Adiciona os itens de backup obrigatórios
+        backupMedia.forEach(b => temporaryList.push(b));
 
-    // ==========================================
-    // FILTRA TODAS AS PUBLICAÇÕES COM IMAGEM
-    // ==========================================
-    const postsComImagem = data.items.filter(item => {
+        // 3. Embaralha a lista (Fisher-Yates shuffle)
+        for (let i = temporaryList.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [temporaryList[i], temporaryList[j]] = [temporaryList[j], temporaryList[i]];
+        }
 
-      let possibleImg =
-        item.thumbnail ||
-        (item.enclosure && item.enclosure.link ? item.enclosure.link : null) ||
-        extrairImg(item.description);
+        mainPlaylist = temporaryList;
+        currentIndex = 0;
+        console.log("Playlist atualizada com " + mainPlaylist.length + " itens.");
+    } catch (e) {
+        console.error("Erro no RSS, usando apenas backups.");
+        mainPlaylist = [...backupMedia];
+    }
+}
 
-      if (!possibleImg) return false;
+function exibirProximo() {
+    if (mainPlaylist.length === 0) return;
 
-      // Ignora vídeos
-      if (possibleImg.includes(".mp4")) return false;
-
-      return true;
-    });
-
-    if (postsComImagem.length === 0) {
-      document.getElementById('loading').innerText =
-        "Nenhuma publicação com imagem encontrada.";
-      return;
+    // Se chegou ao fim da playlist, recarrega e embaralha de novo
+    if (currentIndex >= mainPlaylist.length) {
+        montarPlaylist().then(() => exibirProximo());
+        return;
     }
 
-    // ==========================================
-    // SORTEIA ENTRE TODAS AS PUBLICAÇÕES COM IMAGEM
-    // ==========================================
-    const item =
-      postsComImagem[Math.floor(Math.random() * postsComImagem.length)];
+    const item = mainPlaylist[currentIndex];
+    
+    let mediaHtml = item.type === 'video' 
+        ? `<video src="${item.url}" autoplay loop muted playsinline></video>`
+        : `<img src="${item.url}" onerror="this.src='${backupMedia[0].url}'">`;
 
-    let rawImg =
-      item.thumbnail ||
-      (item.enclosure && !item.enclosure.link.includes(".mp4")
-        ? item.enclosure.link
-        : null) ||
-      extrairImg(item.description);
+    renderizar(mediaHtml, item.caption);
+    currentIndex++;
+}
 
-    const imgFinal = fixImage(rawImg);
-
-    const cleanDesc = stripHtml(item.description);
-
-    // ==========================================
-    // RENDERIZA
-    // ==========================================
-    document.getElementById('app').innerHTML = `
-      <div class="topo-foto">
-        ${
-          imgFinal
-            ? `<img src="${imgFinal}"
-                   onerror="this.parentElement.style.background='#333'; this.style.display='none';">`
-            : `<div style="color:#666">Sem imagem disponível</div>`
-        }
-      </div>
-
-      <div class="base-info">
-        <div class="header-perfil">
-          <div class="avatar">
-            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png">
-          </div>
-          <div>
-            <div class="nome-principal">Pastel do Chiquinho</div>
-            <div class="arroba">@pasteldochiquinho24hs</div>
-          </div>
+function renderizar(mediaHtml, caption) {
+    const container = document.getElementById('viewport');
+    container.innerHTML = `
+        <div class="insta-header">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="logo-icon" alt="Ícone">
+            <img src="https://www.pngkey.com/png/full/28-287308_instagram-logo-text-white.png" class="logo-text" alt="Instagram">
         </div>
-
-        <div class="conteudo-texto">
-          <div class="titulo">${item.title}</div>
-          <div class="legenda">${cleanDesc}</div>
+        <div class="post-card">
+            <div class="post-media-container">${mediaHtml}</div>
+            <div class="post-content">
+                <div class="user-info">
+                    <div class="avatar">
+                        <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png">
+                    </div>
+                    <div class="user-details">
+                        <div class="username">pasteldochiquinho24hs</div>
+                        <div class="location">Instagram</div>
+                    </div>
+                </div>
+                <div class="caption-area">
+                    <p><strong>pasteldochiquinho24hs</strong> ${caption}</p>
+                </div>
+                <div class="text-overflow-fade"></div>
+            </div>
         </div>
-      </div>
     `;
-
-  } catch (e) {
-
-    document.getElementById('loading').innerText =
-      "Erro de conexão com o feed.";
-
-  }
-
 }
 
-// ===============================
-// EXTRAIR IMAGEM DA DESCRIÇÃO
-// ===============================
-function extrairImg(html) {
-  if (!html) return null;
-
-  const div = document.createElement('div');
-  div.innerHTML = html;
-
-  const img = div.querySelector('img');
-  return img ? img.src : null;
-}
-
-// ===============================
-// REMOVER HTML DA LEGENDA
-// ===============================
-function stripHtml(html) {
-  if (!html) return "";
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || "";
-}
-
-// ===============================
-carregarConteudo();
-// ===============================
-
+// Inicialização
+(async function init() {
+    await montarPlaylist();
+    exibirProximo();
+    // Troca o item a cada 30 segundos
+    setInterval(exibirProximo, 30000);
+})();
 </script>
 
 </body>
